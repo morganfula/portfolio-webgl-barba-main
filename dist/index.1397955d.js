@@ -450,6 +450,13 @@ var _shadersFragmentGlsl = require('./shaders/fragment.glsl');
 var _shadersFragmentGlslDefault = _parcelHelpers.interopDefault(_shadersFragmentGlsl);
 var _shadersVertexGlsl = require('./shaders/vertex.glsl');
 var _shadersVertexGlslDefault = _parcelHelpers.interopDefault(_shadersVertexGlsl);
+require('fs');
+const buffer = (function () {
+  let e = new Error("ENOENT: no such file or directory, open '...'");
+  e.code = 'ENOENT';
+  throw e;
+})();
+console.log(buffer);
 class Sketch {
   constructor(options) {
     this.container = options.domElement;
@@ -521,7 +528,7 @@ new Sketch({
   domElement: document.getElementById('container')
 });
 
-},{"three":"1lq1c","three/examples/jsm/controls/OrbitControls.js":"5mYmG","./shaders/fragment.glsl":"6JKfI","./shaders/vertex.glsl":"4OTxZ","@parcel/transformer-js/lib/esmodule-helpers.js":"4Tkir"}],"1lq1c":[function(require,module,exports) {
+},{"three":"1lq1c","three/examples/jsm/controls/OrbitControls.js":"5mYmG","./shaders/fragment.glsl":"6JKfI","./shaders/vertex.glsl":"4OTxZ","@parcel/transformer-js/lib/esmodule-helpers.js":"4Tkir","fs":"4DogC"}],"1lq1c":[function(require,module,exports) {
 var define;
 /**
 * @license
@@ -31165,6 +31172,8 @@ exports.export = function (dest, destName, get) {
 module.exports="#define GLSLIFY 1\nvarying float pulse;\nvarying vec2 vUv;\nuniform float time;\n\nvoid main() {\n  // gl_FragColor = vec4(1.,0.,0.,1.);\n  float sinePulse = (1. + sin(vUv.x* 50. - time)) * 0.5;\n\tgl_FragColor = vec4( vUv,0.,1. );\n  gl_FragColor = vec4( sinePulse, 0.,0.,1. );\n}";
 },{}],"4OTxZ":[function(require,module,exports) {
 module.exports="#define GLSLIFY 1\nuniform float time;\nvarying float pulse;\n\nvarying vec2 vUv;\n\nvoid main() {\n  vUv = uv;\n  vec3 newPosition = position;\n  newPosition.z = 0.1* sin(length(position)* 30. + time);\n  pulse = 20.* newPosition.z;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
+},{}],"4DogC":[function(require,module,exports) {
+"use strict";
 },{}]},["2FmRy","6fOLN"], "6fOLN", "parcelRequire4432")
 
 //# sourceMappingURL=index.1397955d.js.map
