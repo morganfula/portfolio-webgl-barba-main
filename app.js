@@ -4,10 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import fragment from './shaders/fragment.glsl';
 import vertex from './shaders/vertex.glsl';
 
-import fs from 'fs';
-const buffer = fs.readFileSync(__dirname + './texture.jpg');
-
-console.log(buffer);
+testTexture.src = require('./texture.jpg');
 
 export default class Sketch {
   constructor(options) {
