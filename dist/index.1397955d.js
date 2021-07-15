@@ -495,10 +495,13 @@ class Sketch {
     this.geometry = new _three.PlaneBufferGeometry(0.5, 0.5, 100, 100);
     // this.material = new THREE.MeshNormalMaterial();
     this.material = new _three.ShaderMaterial({
-      wireframe: true,
+      // wireframe: true,
       uniforms: {
         time: {
           value: 1.0
+        },
+        uTexture: {
+          value: new _three.TextureLoader().load(_urlTextureJpgDefault.default)
         },
         resolution: {
           value: new _three.Vector2()
@@ -31165,7 +31168,7 @@ exports.export = function (dest, destName, get) {
   });
 };
 },{}],"6JKfI":[function(require,module,exports) {
-module.exports="#define GLSLIFY 1\nvarying float pulse;\nvarying vec2 vUv;\nuniform float time;\n\nvoid main() {\n  // gl_FragColor = vec4(1.,0.,0.,1.);\n  float sinePulse = (1. + sin(vUv.x* 50. + time * 10.)) * 0.5;\n\tgl_FragColor = vec4( vUv,0.,1. );\n  gl_FragColor = vec4( sinePulse, 0.,0.,1. );\n}";
+module.exports="#define GLSLIFY 1\nvarying float pulse;\nuniform sampler2D uTexture;\nvarying vec2 vUv;\nuniform float time;\n\nvoid main() {\n  // gl_FragColor = vec4(1.,0.,0.,1.);\n  vec4 myimage = texture(uTexture, vUv);\n  float sinePulse = (1. + sin(vUv.x* 50. + time )) * 0.5;\n\tgl_FragColor = vec4( vUv,0.,1. );\n  gl_FragColor = vec4( sinePulse, 0.,0.,1. );\n  gl_FragColor = myimage;\n}";
 },{}],"4OTxZ":[function(require,module,exports) {
 module.exports="#define GLSLIFY 1\nuniform float time;\nvarying float pulse;\n\nvarying vec2 vUv;\n\nvoid main() {\n  vUv = uv;\n  vec3 newPosition = position;\n  newPosition.z = 0.1* sin(length(position)* 30. + time);\n  pulse = 20.* newPosition.z;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
 },{}],"1VFU5":[function(require,module,exports) {

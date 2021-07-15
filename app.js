@@ -66,9 +66,10 @@ export default class Sketch {
     // this.material = new THREE.MeshNormalMaterial();
 
     this.material = new THREE.ShaderMaterial({
-      wireframe: true,
+      // wireframe: true,
       uniforms: {
         time: { value: 1.0 },
+        uTexture: { value: new THREE.TextureLoader().load(testTexture) },
         resolution: { value: new THREE.Vector2() },
       },
 
