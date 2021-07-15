@@ -450,6 +450,9 @@ var _shadersFragmentGlsl = require('./shaders/fragment.glsl');
 var _shadersFragmentGlslDefault = _parcelHelpers.interopDefault(_shadersFragmentGlsl);
 var _shadersVertexGlsl = require('./shaders/vertex.glsl');
 var _shadersVertexGlslDefault = _parcelHelpers.interopDefault(_shadersVertexGlsl);
+var _urlTextureJpg = require('url:./texture.jpg');
+var _urlTextureJpgDefault = _parcelHelpers.interopDefault(_urlTextureJpg);
+console.log(_urlTextureJpgDefault.default);
 class Sketch {
   constructor(options) {
     this.container = options.domElement;
@@ -521,7 +524,7 @@ new Sketch({
   domElement: document.getElementById('container')
 });
 
-},{"three":"1lq1c","three/examples/jsm/controls/OrbitControls.js":"5mYmG","./shaders/fragment.glsl":"6JKfI","./shaders/vertex.glsl":"4OTxZ","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"1lq1c":[function(require,module,exports) {
+},{"three":"1lq1c","three/examples/jsm/controls/OrbitControls.js":"5mYmG","./shaders/fragment.glsl":"6JKfI","./shaders/vertex.glsl":"4OTxZ","@parcel/transformer-js/lib/esmodule-helpers.js":"2xCyJ","url:./texture.jpg":"1VFU5"}],"1lq1c":[function(require,module,exports) {
 var define;
 /**
 * @license
@@ -31119,7 +31122,7 @@ class MapControls extends OrbitControls {
   }
 }
 
-},{"three":"1lq1c","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"5gA8y":[function(require,module,exports) {
+},{"three":"1lq1c","@parcel/transformer-js/lib/esmodule-helpers.js":"2xCyJ"}],"2xCyJ":[function(require,module,exports) {
 "use strict";
 
 exports.interopDefault = function (a) {
@@ -31165,6 +31168,54 @@ exports.export = function (dest, destName, get) {
 module.exports="#define GLSLIFY 1\nvarying float pulse;\nvarying vec2 vUv;\nuniform float time;\n\nvoid main() {\n  // gl_FragColor = vec4(1.,0.,0.,1.);\n  float sinePulse = (1. + sin(vUv.x* 50. + time * 10.)) * 0.5;\n\tgl_FragColor = vec4( vUv,0.,1. );\n  gl_FragColor = vec4( sinePulse, 0.,0.,1. );\n}";
 },{}],"4OTxZ":[function(require,module,exports) {
 module.exports="#define GLSLIFY 1\nuniform float time;\nvarying float pulse;\n\nvarying vec2 vUv;\n\nvoid main() {\n  vUv = uv;\n  vec3 newPosition = position;\n  newPosition.z = 0.1* sin(length(position)* 30. + time);\n  pulse = 20.* newPosition.z;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
-},{}]},["2FmRy","6fOLN"], "6fOLN", "parcelRequire4432")
+},{}],"1VFU5":[function(require,module,exports) {
+module.exports = require('./bundle-url').getBundleURL() + "texture.de48ce3c.jpg"
+},{"./bundle-url":"4jmDq"}],"4jmDq":[function(require,module,exports) {
+"use strict";
+
+/* globals document:readonly */
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
+} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+
+
+function getOrigin(url) {
+  let matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
+
+  if (!matches) {
+    throw new Error('Origin not found');
+  }
+
+  return matches[0];
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+},{}]},["2FmRy","6fOLN"], "6fOLN", "parcelRequire427e")
 
 //# sourceMappingURL=index.1397955d.js.map

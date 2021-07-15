@@ -1,27 +1,9 @@
 {
-  "name": "portfolio-webgl-barba",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "dependencies": {
-    "parcel": "^2.0.0-beta.2",
-    "three": "^0.130.1"
-  },
   "devDependencies": {
-    "@parcel/transformer-glsl": "^2.0.0-beta.2"
+    "@parcel/transformer-glsl": "^2.0.0-beta.2",
+    "@parcel/transformer-image": "^2.0.0-beta.2"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/morganfula/portfolio-webgl-barba.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/morganfula/portfolio-webgl-barba/issues"
-  },
-  "homepage": "https://github.com/morganfula/portfolio-webgl-barba#readme"
+  "dependencies": {
+    "three": "^0.130.1"
+  }
 }
