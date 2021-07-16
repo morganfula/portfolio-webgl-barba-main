@@ -450,9 +450,9 @@ var _shadersFragmentGlsl = require('./shaders/fragment.glsl');
 var _shadersFragmentGlslDefault = _parcelHelpers.interopDefault(_shadersFragmentGlsl);
 var _shadersVertexGlsl = require('./shaders/vertex.glsl');
 var _shadersVertexGlslDefault = _parcelHelpers.interopDefault(_shadersVertexGlsl);
-var _urlTextureJpg = require('url:./texture.jpg');
-var _urlTextureJpgDefault = _parcelHelpers.interopDefault(_urlTextureJpg);
-console.log(_urlTextureJpgDefault.default);
+var _urlWaterJpg = require('url:./water.jpg');
+var _urlWaterJpgDefault = _parcelHelpers.interopDefault(_urlWaterJpg);
+console.log(_urlWaterJpgDefault.default);
 class Sketch {
   constructor(options) {
     this.container = options.domElement;
@@ -493,6 +493,7 @@ class Sketch {
   }
   addObjects() {
     this.geometry = new _three.PlaneBufferGeometry(0.5, 0.5, 100, 100);
+    this.geometry = new _three.SphereBufferGeometry(0.5, 80, 80);
     // this.material = new THREE.MeshNormalMaterial();
     this.material = new _three.ShaderMaterial({
       // wireframe: true,
@@ -501,7 +502,7 @@ class Sketch {
           value: 1.0
         },
         uTexture: {
-          value: new _three.TextureLoader().load(_urlTextureJpgDefault.default)
+          value: new _three.TextureLoader().load(_urlWaterJpgDefault.default)
         },
         resolution: {
           value: new _three.Vector2()
@@ -527,7 +528,7 @@ new Sketch({
   domElement: document.getElementById('container')
 });
 
-},{"three":"1lq1c","three/examples/jsm/controls/OrbitControls.js":"5mYmG","./shaders/fragment.glsl":"6JKfI","./shaders/vertex.glsl":"4OTxZ","@parcel/transformer-js/lib/esmodule-helpers.js":"2xCyJ","url:./texture.jpg":"1VFU5"}],"1lq1c":[function(require,module,exports) {
+},{"three":"1lq1c","three/examples/jsm/controls/OrbitControls.js":"5mYmG","./shaders/fragment.glsl":"6JKfI","./shaders/vertex.glsl":"4OTxZ","@parcel/transformer-js/lib/esmodule-helpers.js":"2Fsj6","url:./water.jpg":"5G8TL"}],"1lq1c":[function(require,module,exports) {
 var define;
 /**
 * @license
@@ -31125,7 +31126,7 @@ class MapControls extends OrbitControls {
   }
 }
 
-},{"three":"1lq1c","@parcel/transformer-js/lib/esmodule-helpers.js":"2xCyJ"}],"2xCyJ":[function(require,module,exports) {
+},{"three":"1lq1c","@parcel/transformer-js/lib/esmodule-helpers.js":"2Fsj6"}],"2Fsj6":[function(require,module,exports) {
 "use strict";
 
 exports.interopDefault = function (a) {
@@ -31168,12 +31169,12 @@ exports.export = function (dest, destName, get) {
   });
 };
 },{}],"6JKfI":[function(require,module,exports) {
-module.exports="#define GLSLIFY 1\nvarying float pulse;\nuniform sampler2D uTexture;\nvarying vec2 vUv;\nuniform float time;\n\nvoid main() {\n  // gl_FragColor = vec4(1.,0.,0.,1.);\n  vec4 myimage = texture(uTexture, vUv);\n  float sinePulse = (1. + sin(vUv.x* 50. + time )) * 0.5;\n\tgl_FragColor = vec4( vUv,0.,1. );\n  gl_FragColor = vec4( sinePulse, 0.,0.,1. );\n  gl_FragColor = myimage;\n}";
+module.exports="#define GLSLIFY 1\nuniform float time;\nuniform sampler2D uTexture;\nvarying float pulse;\nvarying vec2 vUv;\nvarying vec3 vNormal;\n\nvoid main() {\n  // gl_FragColor = vec4(1.,0.,0.,1.);\n\n  vec4 myimage = texture(\n    uTexture, \n    vUv + 0.01 *cos(vUv* 20. + time)\n    );\n\n  float sinePulse = (1. + sin(vUv.x* 50. + time )) * 0.5;\n\tgl_FragColor = vec4( vUv,0.,1. );\n  gl_FragColor = vec4( sinePulse, 0.,0.,1. );\n  gl_FragColor = myimage;\n  gl_FragColor = vec4(0.5*(pulse+1.),0.,0., 1.);\n}";
 },{}],"4OTxZ":[function(require,module,exports) {
-module.exports="#define GLSLIFY 1\nuniform float time;\nvarying float pulse;\n\nvarying vec2 vUv;\n\nvoid main() {\n  vUv = uv;\n  vec3 newPosition = position;\n  newPosition.z = 0.1* sin(length(position)* 30. + time);\n  pulse = 20.* newPosition.z;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
-},{}],"1VFU5":[function(require,module,exports) {
-module.exports = require('./bundle-url').getBundleURL() + "texture.de48ce3c.jpg"
-},{"./bundle-url":"4jmDq"}],"4jmDq":[function(require,module,exports) {
+module.exports="#define GLSLIFY 1\nuniform float time;\nvarying float pulse;\n\nvarying vec2 vUv;\nvarying vec3 vNormal;\n\n//\tSimplex 4D Noise \n//\tby Ian McEwan, Ashima Arts\n//\nvec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}\nfloat permute(float x){return floor(mod(((x*34.0)+1.0)*x, 289.0));}\nvec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}\nfloat taylorInvSqrt(float r){return 1.79284291400159 - 0.85373472095314 * r;}\n\nvec4 grad4(float j, vec4 ip){\n  const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);\n  vec4 p,s;\n\n  p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;\n  p.w = 1.5 - dot(abs(p.xyz), ones.xyz);\n  s = vec4(lessThan(p, vec4(0.0)));\n  p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www; \n\n  return p;\n}\n\nfloat snoise(vec4 v){\n  const vec2  C = vec2( 0.138196601125010504,  // (5 - sqrt(5))/20  G4\n                        0.309016994374947451); // (sqrt(5) - 1)/4   F4\n// First corner\n  vec4 i  = floor(v + dot(v, C.yyyy) );\n  vec4 x0 = v -   i + dot(i, C.xxxx);\n\n// Other corners\n\n// Rank sorting originally contributed by Bill Licea-Kane, AMD (formerly ATI)\n  vec4 i0;\n\n  vec3 isX = step( x0.yzw, x0.xxx );\n  vec3 isYZ = step( x0.zww, x0.yyz );\n//  i0.x = dot( isX, vec3( 1.0 ) );\n  i0.x = isX.x + isX.y + isX.z;\n  i0.yzw = 1.0 - isX;\n\n//  i0.y += dot( isYZ.xy, vec2( 1.0 ) );\n  i0.y += isYZ.x + isYZ.y;\n  i0.zw += 1.0 - isYZ.xy;\n\n  i0.z += isYZ.z;\n  i0.w += 1.0 - isYZ.z;\n\n  // i0 now contains the unique values 0,1,2,3 in each channel\n  vec4 i3 = clamp( i0, 0.0, 1.0 );\n  vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );\n  vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );\n\n  //  x0 = x0 - 0.0 + 0.0 * C \n  vec4 x1 = x0 - i1 + 1.0 * C.xxxx;\n  vec4 x2 = x0 - i2 + 2.0 * C.xxxx;\n  vec4 x3 = x0 - i3 + 3.0 * C.xxxx;\n  vec4 x4 = x0 - 1.0 + 4.0 * C.xxxx;\n\n// Permutations\n  i = mod(i, 289.0); \n  float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);\n  vec4 j1 = permute( permute( permute( permute (\n            i.w + vec4(i1.w, i2.w, i3.w, 1.0 ))\n          + i.z + vec4(i1.z, i2.z, i3.z, 1.0 ))\n          + i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))\n          + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));\n// Gradients\n// ( 7*7*6 points uniformly over a cube, mapped onto a 4-octahedron.)\n// 7*7*6 = 294, which is close to the ring size 17*17 = 289.\n\n  vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;\n\n  vec4 p0 = grad4(j0,   ip);\n  vec4 p1 = grad4(j1.x, ip);\n  vec4 p2 = grad4(j1.y, ip);\n  vec4 p3 = grad4(j1.z, ip);\n  vec4 p4 = grad4(j1.w, ip);\n\n// Normalise gradients\n  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n  p4 *= taylorInvSqrt(dot(p4,p4));\n\n// Mix contributions from the five corners\n  vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);\n  vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);\n  m0 = m0 * m0;\n  m1 = m1 * m1;\n  return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))\n              + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;\n\n}\n\nvoid main() {\n  vUv = uv;\n  vNormal= normal;\n  vec3 newPosition = position;\n\tfloat noise = snoise(vec4(normal* 4., time * 0.1));\n  // newPosition.z = 0.1* sin(length(position)* 30. + time);\n\tnewPosition = newPosition + 0.1*normal * noise;\n  pulse = noise;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\n}";
+},{}],"5G8TL":[function(require,module,exports) {
+module.exports = require('./bundle-url').getBundleURL() + "water.c76b22dc.jpg"
+},{"./bundle-url":"2jEGi"}],"2jEGi":[function(require,module,exports) {
 "use strict";
 
 /* globals document:readonly */
